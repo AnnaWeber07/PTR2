@@ -1,97 +1,93 @@
+import ConnectionManager.{AddSubscriber, BroadcastMessage, ConnectionClosed}
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import akka.io.{IO, Tcp, Udp}
+import akka.io.Tcp.{Bind, Bound, CommandFailed, Connected, PeerClosed, Register, Write}
 import akka.util.ByteString
 
-import scala.collection.immutable.Map
+import scala.collection.immutable
+
 
 // Actor for managing server connections
-class ConnectionManager extends Actor with ActorLogging {
-  import Tcp._
-  import context.system
+object ConnectionManager {
+  def props(settings: Settings): Props =
+    Props(new ConnectionManager(settings))
 
-  var tcpServer: Option[ActorRef] = None
-  var udpServer: Option[ActorRef] = None
+  final case class ConnectionClosed(address: String, id: Int)
+  final case class BroadcastMessage(subscribers: Set[ActorRef], message: ByteString)
+  final case class AddSubscriber(id: Int, sender: ActorRef)
+}
 
-  var tcpConnections: Map[String, ActorRef] = Map.empty
-  var udpConnections: Map[String, ActorRef] = Map.empty
+case class Settings(address: String, port: Int)
 
-  override def preStart(): Unit = {
-    // Start TCP server
-    tcpServer = Some(IO(Tcp) ! Tcp.Bind(self, Settings.TcpServerAddress))
+class ConnectionManager(settings: Settings) extends Actor with ActorLogging {
 
-    // Start UDP server
-    udpServer = Some(IO(Udp) ! Udp.Bind(self, Settings.UdpServerAddress))
-  }
+  val settings = Settings("localhost", 8080)
+  val connectionManager = system.actorOf(ConnectionManager.props(settings), "connectionManager")
+
+  private var connections: immutable.Map[Int, ActorRef] = immutable.Map.empty
+  private var subscribers: immutable.Map[Int, ActorRef] = immutable.Map.empty
+  private var connectionCounter: Int = 0
 
   override def receive: Receive = {
-    case Tcp.Bound(localAddress) =>
-      log.info(s"TCP server bound to $localAddress")
+    case command @ Bound(localAddress) =>
+      log.info(s"Message broker bound to $localAddress")
 
-    case Udp.Bound(localAddress) =>
-      log.info(s"UDP server bound to $localAddress")
-
-    case Tcp.CommandFailed(_: Tcp.Bind) =>
-      log.error("TCP server binding failed.")
+    case command @ CommandFailed(_: Bind) =>
+      log.error(s"Failed to bind to ${settings.address}:${settings.port}: ${command.failureMessage}")
       context.stop(self)
 
-    case Udp.CommandFailed(_: Udp.Bind) =>
-      log.error("UDP server binding failed.")
-      context.stop(self)
+    case command @ Connected(remote, local) =>
+      val id = connectionCounter
+      connectionCounter += 1
 
-    case Tcp.Connected(remote, local) =>
+      val handler = context.actorOf(ConnectionActor.props(id, subscribers))
       val connection = sender()
-      val connectionId = s"tcp-${remote.getHostName}:${remote.getPort}"
-      log.info(s"TCP connection established: $connectionId")
+      connection ! Register(handler)
+      connections = connections + (id -> connection)
 
-      val connectionActor = context.actorOf(ConnectionActor.props(connection, self))
-      tcpConnections = tcpConnections + (connectionId -> connectionActor)
+      log.info(s"New connection established from $remote with id $id")
 
-    case Udp.Received(data, remote) =>
-      val connectionId = s"udp-${remote.getAddress.getHostAddress}:${remote.getPort}"
-      udpConnections.get(connectionId) match {
-        case Some(connectionActor) =>
-          connectionActor ! data
-        case None =>
-          val connectionActor = context.actorOf(ConnectionActor.props(remote, self))
-          udpConnections = udpConnections + (connectionId -> connectionActor)
-          connectionActor ! data
-      }
+    case AddSubscriber(id, sender) =>
+      subscribers = subscribers + (id -> sender)
 
-    case Udp.Unbind =>
-      udpServer.foreach(_ ! Udp.Unbind)
+    case BroadcastMessage(subscribers, message) =>
+      subscribers.foreach(_ ! Write(message))
 
-    case Udp.Unbound =>
-      log.info("UDP server unbound.")
+    case PeerClosed =>
+      context.parent ! ConnectionClosed(connection.remoteAddress.toString, id)
       context.stop(self)
-
-    case Tcp.Unbind =>
-      tcpServer.foreach(_ ! Tcp.Unbind)
-
-    case Tcp.Unbound =>
-      log.info("TCP server unbound.")
-      context.stop(self)
-
-    case message: BroadcastMessage =>
-      tcpConnections.values.foreach(_ ! message)
-      udpConnections.values.foreach(_ ! message)
-
-    case message: String =>
-      tcpConnections.values.foreach(_ ! ByteString(message))
-
-    case ConnectionClosed(connection) =>
-      val connectionId = s"${connection.protocol}-${connection.remoteAddress}"
-      if (connection.protocol == "tcp") {
-        tcpConnections = tcpConnections - connectionId
-      } else if (connection.protocol == "udp") {
-        udpConnections = udpConnections - connectionId
-      }
-
-    case _ =>
-      log.error("Unknown message received.")
   }
 }
 
-// Companion object for ConnectionManager actor
-object ConnectionManager {
-  def props: Props = Props(new ConnectionManager)
+
+object ConnectionActor {
+  def props(connection: ActorRef) = Props(new ConnectionActor(connection))
+
+  case class Init(id: Int, subscribers: Map[Int, ActorRef])
+}
+
+class ConnectionActor(connection: ActorRef) extends Actor with ActorLogging {
+  import ConnectionActor._
+
+  // initialize connection id and subscriber map
+  var id: Int = _
+  var subscribers: Map[Int, ActorRef] = _
+
+  override def receive: Receive = {
+
+    // initialize connection
+    case Init(connectionId, subscriberMap) =>
+      id = connectionId
+      subscribers = subscriberMap
+
+    // handle incoming data
+    case data: ByteString =>
+      val message = s"[id=$id] $data"
+      log.info(s"Received message: ")
+        BroadcastMessage(subscribers.values.filterNot(_ == self).toSet, ByteString(message)))
+
+    // handle connection closed
+    case PeerClosed =>
+      context.parent ! ConnectionClosed(connection.remoteAddress.toString, id)
+      context.stop(self)
+  }
 }

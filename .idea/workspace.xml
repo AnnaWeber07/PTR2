@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9eb115c7-7128-4bea-8585-5b76fa7b49c4" name="Changes" comment="system skeleton">
+    <list default="true" id="9eb115c7-7128-4bea-8585-5b76fa7b49c4" name="Changes" comment="ConnectionManager work">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/ConnectionServerManager.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ConnectionServerManager.scala" afterDir="false" />
     </list>
@@ -60,7 +60,7 @@
       <option name="presentableId" value="Default" />
       <updated>1683044374675</updated>
       <workItem from="1683044376024" duration="525000" />
-      <workItem from="1683648644775" duration="3509000" />
+      <workItem from="1683648644775" duration="4930000" />
     </task>
     <task id="LOCAL-00001" summary="system skeleton">
       <created>1683656874932</created>
@@ -69,7 +69,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683656874932</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="ConnectionManager work">
+      <created>1683657601427</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1683657601427</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -77,6 +84,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="system skeleton" />
-    <option name="LAST_COMMIT_MESSAGE" value="system skeleton" />
+    <MESSAGE value="ConnectionManager work" />
+    <option name="LAST_COMMIT_MESSAGE" value="ConnectionManager work" />
   </component>
 </project>
