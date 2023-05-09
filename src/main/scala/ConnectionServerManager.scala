@@ -1,5 +1,5 @@
 import ConnectionManager.{AddSubscriber, BroadcastMessage, ConnectionClosed}
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import akka.io.Tcp.{Bind, Bound, CommandFailed, Connected, PeerClosed, Register, Write}
 import akka.util.ByteString
 
@@ -21,6 +21,7 @@ case class Settings(address: String, port: Int)
 class ConnectionManager(settings: Settings) extends Actor with ActorLogging {
 
   val settings = Settings("localhost", 8080)
+  val system = ActorSystem("ConnectionManager")
   val connectionManager = system.actorOf(ConnectionManager.props(settings), "connectionManager")
 
   private var connections: immutable.Map[Int, ActorRef] = immutable.Map.empty
@@ -58,36 +59,30 @@ class ConnectionManager(settings: Settings) extends Actor with ActorLogging {
   }
 }
 
-
 object ConnectionActor {
-  def props(connection: ActorRef) = Props(new ConnectionActor(connection))
+  def props(id: Int, subscribers: Map[Int, ActorRef]): Props =
+    Props(new ConnectionActor(id, subscribers))
 
-  case class Init(id: Int, subscribers: Map[Int, ActorRef])
+  final case class IncomingMessage(id: Int, message: String)
+  final case class OutgoingMessage(message: ByteString)
 }
 
-class ConnectionActor(connection: ActorRef) extends Actor with ActorLogging {
+class ConnectionActor(id: Int, subscribers: Map[Int, ActorRef]) extends Actor with ActorLogging {
   import ConnectionActor._
 
-  // initialize connection id and subscriber map
-  var id: Int = _
-  var subscribers: Map[Int, ActorRef] = _
-
   override def receive: Receive = {
-
-    // initialize connection
-    case Init(connectionId, subscriberMap) =>
-      id = connectionId
-      subscribers = subscriberMap
-
-    // handle incoming data
     case data: ByteString =>
-      val message = s"[id=$id] $data"
-      log.info(s"Received message: ")
-        BroadcastMessage(subscribers.values.filterNot(_ == self).toSet, ByteString(message)))
+      context.parent ! BroadcastMessage(subscribers.values.filterNot(_ == self).toSet, data)
 
-    // handle connection closed
+    case IncomingMessage(id, message) =>
+      log.info(s"Received message '$message' from connection $id")
+      sender() ! OutgoingMessage(ByteString(s"You said: $message"))
+
+    case OutgoingMessage(data) =>
+      sender() ! Write(data)
+
     case PeerClosed =>
-      context.parent ! ConnectionClosed(connection.remoteAddress.toString, id)
+      log.info(s"Connection $id closed by peer")
       context.stop(self)
   }
 }
