@@ -4,14 +4,38 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9eb115c7-7128-4bea-8585-5b76fa7b49c4" name="Changes" comment="" />
+    <list default="true" id="9eb115c7-7128-4bea-8585-5b76fa7b49c4" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Batcher.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/ConnectionServerManager.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Database.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/DeadLetterActor.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/MessageBroker.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Publisher.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Router.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Subscriber.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/TopicActor.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -27,6 +51,13 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -38,8 +69,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1683044374675</updated>
-      <workItem from="1683044376024" duration="1000" />
+      <workItem from="1683044376024" duration="525000" />
+      <workItem from="1683648644775" duration="2749000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
