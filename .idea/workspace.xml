@@ -5,8 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9eb115c7-7128-4bea-8585-5b76fa7b49c4" name="Changes" comment="ConnectionManager work">
+      <change afterPath="$PROJECT_DIR$/.idea/scala_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/DeadLetters.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/Main.scala" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/scala/TCPConnection.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.sbt" beforeDir="false" afterPath="$PROJECT_DIR$/build.sbt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Batcher.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Batcher.scala" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scala/ConnectionServerManager.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ConnectionServerManager.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/DeadLetterChannel.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/MessageBroker.scala" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/MessageRouter.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/MessageRouter.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Publisher.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Publisher.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/Subscriber.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/Subscriber.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/TopicActor.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/TopicActor.scala" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,17 +53,36 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/Анна/Desktop/Broker",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
-    "project.structure.last.edited": "Modules",
+    "project.structure.last.edited": "Global Libraries",
     "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
+    "project.structure.side.proportion": "0.43678162",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="Message" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Message" />
+      <module name="PTR2" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Message" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ScalaProjectSettings">
+    <option name="scala3DisclaimerShown" value="true" />
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -60,7 +92,18 @@
       <option name="presentableId" value="Default" />
       <updated>1683044374675</updated>
       <workItem from="1683044376024" duration="525000" />
-      <workItem from="1683648644775" duration="5168000" />
+      <workItem from="1683648644775" duration="5727000" />
+      <workItem from="1683695987288" duration="1409000" />
+      <workItem from="1683731810445" duration="69000" />
+      <workItem from="1684170825865" duration="3282000" />
+      <workItem from="1684218850219" duration="1048000" />
+      <workItem from="1684242930184" duration="1130000" />
+      <workItem from="1684252254333" duration="631000" />
+      <workItem from="1684255236439" duration="779000" />
+      <workItem from="1684259093021" duration="607000" />
+      <workItem from="1684262421328" duration="2521000" />
+      <workItem from="1684301087488" duration="2899000" />
+      <workItem from="1684692138008" duration="2682000" />
     </task>
     <task id="LOCAL-00001" summary="system skeleton">
       <created>1683656874932</created>
@@ -83,7 +126,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683659112273</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="ConnectionManager work">
+      <created>1683659349880</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1683659349880</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,25 +1,39 @@
 ThisBuild / version := "0.1.0-SNAPSHOT"
 
-ThisBuild / scalaVersion := "2.13.10"
+scalaVersion := "3.2.1"
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" %  "test"
+val AkkaVersion = "2.8.0"
+libraryDependencies += "com.typesafe.akka" %% "akka-actor-typed" % AkkaVersion
+libraryDependencies += "org.jsoup" % "jsoup" % "1.15.4"
+
+libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.5.0"
+libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.8.0"
+libraryDependencies += "org.json4s" %% "json4s-native" % "4.0.6"
+
+libraryDependencies += "org.json4s" %% "json4s-jackson" % "4.0.6"
+libraryDependencies += "io.spray" %% "spray-json" % "1.3.6"
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.7.0",
-  "com.typesafe.akka" %% "akka-stream" % "2.7.0",
-  "com.typesafe.akka" %% "akka-http" % "10.5.0",
-  "de.heikoseeberger" %% "akka-http-play-json" % "1.39.2",
-  "com.typesafe.akka" %% "akka-testkit" % "2.7.0" % Test,
-  "org.scalatest" %% "scalatest" % "3.2.15" % Test,
-  "com.typesafe.play" %% "play-streams" % "2.8.18",
-  "io.circe" %% "circe-core" % "0.14.4",
-  "io.circe" %% "circe-parser" % "0.14.4",
-  "io.circe" %% "circe-generic-extras" % "0.14.3",
-  "com.typesafe.akka" %% "akka-cluster" % "2.7.0",
-  "com.typesafe.slick" %% "slick" % "3.3.3",
-  "org.postgresql" % "postgresql" % "42.3.4",
-  "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3",
-  "com.github.tminglei" %% "slick-pg" % "0.20.3",
-  "com.github.tminglei" %% "slick-pg_play-json" % "0.20.3",
-  "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
+  "org.scalikejdbc" %% "scalikejdbc"       % "4.0.0",
+  "com.h2database"  %  "h2"                % "2.1.214",
+  "ch.qos.logback"  %  "logback-classic"   % "1.4.5",
+  "org.scalikejdbc" %% "scalikejdbc-test" % "4.0.0" % "test",
+  "org.scalikejdbc" %% "scalikejdbc-config" % "4.0.0"
+)
+
+libraryDependencies += "com.microsoft.sqlserver" % "mssql-jdbc" % "12.2.0.jre11"
+
+libraryDependencies += "org.apache.commons" % "commons-math3" % "3.6.1"
+libraryDependencies += "org.json" % "json" % "20210307"
+libraryDependencies += "com.typesafe.akka" %% "akka-testkit" % "2.8.0" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
+libraryDependencies ++= Seq(
+  "com.typesafe.akka" %% "akka-actor" % "2.8.0",
+  "com.typesafe.akka" %% "akka-stream" % "2.8.0",
+  "com.typesafe.akka" %% "akka-protobuf-v3" % "2.8.0",
+  "com.typesafe.akka" %% "akka-slf4j" % "2.8.0",
+  "com.typesafe.akka" %% "akka-actor-typed" % "2.8.0",
+  "com.typesafe.akka" %% "akka-testkit" % "2.8.0" % Test
 )
 
 lazy val root = (project in file("."))

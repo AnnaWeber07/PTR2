@@ -1,43 +1,57 @@
-import akka.actor.{Actor, ActorLogging, ActorRef}
-import akka.pattern.ask
-import akka.util.Timeout
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.io.Tcp
+import akka.io.Tcp._
+import akka.io.{IO, Tcp}
+import akka.util.ByteString
 
-import scala.concurrent.Await
-import scala.concurrent.duration.DurationInt
-import scala.language.postfixOps
+import java.net.InetSocketAddress
+import scala.collection.mutable
 
-// Actor for the subscriber
-class Subscriber(connectionManager: ActorRef) extends Actor with ActorLogging {
-  //receives a topic message from connection server manager
+import akka.actor.{Actor, ActorRef}
+import scala.collection.mutable
 
-  implicit val timeout: Timeout = 3 seconds
+case class Subscribe(topic: String, subscriber: ActorRef)
+case class Unsubscribe(topic: String, subscriber: ActorRef)
+case class PublishMessage(topic: String, content: String)
+case class SendMessage(subscriber: ActorRef, content: String)
+import scala.concurrent.duration._
 
-  // Register with connection manager as a consumer
-  connectionManager ! "register_consumer"
+class Subscriber extends Actor {
+  // Dictionary mapping topic to a set of subscribers
+  var uniqueSubscribersMap: mutable.Map[String, Set[ActorRef]] = mutable.Map()
 
-  override def receive: Receive = {
-    case Subscribe(topic) =>
-      // Find producer for topic
-      val producers = Await.result(connectionManager ? "get_producers", timeout.duration).asInstanceOf[Set[ActorRef]]
-      val producer = producers.headOption.getOrElse(context.system.deadLetters)
-      // Subscribe to topic
-      producer ! Subscribe(topic)
+  def receive: Receive = {
+    case Subscribe(topic, subscriber) =>
+      if (uniqueSubscribersMap.contains(topic)) {
+        val subscribers = uniqueSubscribersMap(topic)
+        uniqueSubscribersMap += (topic -> (subscribers + subscriber))
+        subscriber ! Write(ByteString(s"Successfully subscribed!\n"))
 
-    case Unsubscribe(topic) =>
-      // Find producer for topic
-      val producers = Await.result(connectionManager ? "get_producers", timeout.duration).asInstanceOf[Set[ActorRef]]
-      val producer = producers.headOption.getOrElse(context.system.deadLetters)
+      } else {
+        uniqueSubscribersMap += (topic -> Set(subscriber))
+        subscriber ! Write(ByteString(s"Successfully subscribed!\n"))
+      }
 
-      // Unsubscribe from topic
-      producer ! Unsubscribe(topic)
-    case msg: Message =>
-      log.info(s"Received message: $msg")
-    case _ =>
-      log.error("Unknown message received.")
-  }
 
-  override def postStop(): Unit = {
-    // Unregister with connection manager as a consumer
-    connectionManager ! "unregister_consumer"
+    case Unsubscribe(topic, subscriber) =>
+      if(uniqueSubscribersMap.contains(topic)) {
+        val subscribers = uniqueSubscribersMap(topic)
+        if (subscribers.contains(subscriber))
+        {uniqueSubscribersMap += (topic -> (subscribers - subscriber))
+          subscriber ! Write(ByteString(s"Unsubscribed\n"))}
+        else subscriber ! Write(ByteString(s"Error: no subscription found\n"))
+      }
+      else subscriber ! Write(ByteString(s"Error: no topic found\n"))
+
+
+    case PublishMessage(topic, content) =>
+
+      if (uniqueSubscribersMap.contains(topic)) {
+
+        val subscribers = uniqueSubscribersMap(topic)
+        subscribers.foreach { subscriber =>
+          subscriber ! Write(ByteString(s"$content\n"))
+        }
+      }
   }
 }
